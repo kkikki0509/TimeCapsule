@@ -1,5 +1,6 @@
 package com.crabsoup.timecapsule.controller;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.crabsoup.timecapsule.model.Letter;
@@ -45,6 +47,16 @@ public class LetterController {
     public void deleteLetter(@PathVariable Long id) {
         letterService.deleteLetter(id);
     }
+
+    @GetMapping("/search")
+    public List<Letter> searchLetters(
+            @RequestParam String type,      // name or title
+            @RequestParam String keyword,
+            @RequestParam(required = false) LocalDate date
+    ) {
+        return letterService.search(type, keyword, date);
+    }
+        
 
 }
 
