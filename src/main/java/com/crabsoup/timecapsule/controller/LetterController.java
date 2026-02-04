@@ -50,8 +50,8 @@ public class LetterController {
 
     @GetMapping("/search")
     public List<Letter> searchLetters(
-            @RequestParam String type,      // name or title
-            @RequestParam String keyword,
+            @RequestParam(required = false) String type,
+            @RequestParam(required = false) String keyword,
             @RequestParam(required = false) LocalDate date
     ) {
         return letterService.search(type, keyword, date);
