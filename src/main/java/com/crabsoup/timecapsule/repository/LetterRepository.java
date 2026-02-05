@@ -8,6 +8,7 @@ import com.crabsoup.timecapsule.model.Letter;
 
 public interface LetterRepository extends JpaRepository<Letter, Long> {
 
+    //조회기능에 필요한 코드
     List<Letter> findByNameContaining(String name);
     List<Letter> findByNameContainingAndCreatedAt(String name, LocalDate date);
     List<Letter> findByTitleContaining(String Title);

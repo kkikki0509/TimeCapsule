@@ -36,18 +36,23 @@ public class LetterController {
         return letterService.getAllLetters();
     }
 
-    //단건조회
+    /*단건조회
     @GetMapping("/{id}")
     public Letter getLetter(@PathVariable Long id) {
         return letterService.getLetterById(id);
     }
+    */
 
     //삭제
     @DeleteMapping("/{id}")
-    public void deleteLetter(@PathVariable Long id) {
-        letterService.deleteLetter(id);
+    public void deleteLetter(
+        @PathVariable Long id,
+        @RequestParam Integer pw
+    ) {
+        letterService.deleteLetter(id, pw);
     }
 
+    //조회기능
     @GetMapping("/search")
     public List<Letter> searchLetters(
             @RequestParam(required = false) String type,

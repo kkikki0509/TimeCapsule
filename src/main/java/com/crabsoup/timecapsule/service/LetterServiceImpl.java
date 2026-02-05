@@ -2,6 +2,7 @@ package com.crabsoup.timecapsule.service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.stereotype.Service;
 
@@ -31,9 +32,15 @@ public class LetterServiceImpl implements LetterService {
     }
 
     @Override
-    public void deleteLetter(Long id) {
+    public void deleteLetter(Long id, Integer pw) {
+        Letter letter = letterRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("글이 올바르지 않습니다"));
+        
+        if(!Objects.equals(letter.getPw(), pw)) {
+            throw new IllegalArgumentException("비밀번호가 틀렸습니다");
+        }
         letterRepository.deleteById(id);
     }
+
 
     public List<Letter> searchByName(String name) {
         return letterRepository.findByNameContaining(name);

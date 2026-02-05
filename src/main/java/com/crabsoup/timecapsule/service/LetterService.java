@@ -13,7 +13,7 @@ public interface LetterService {
 
     Letter getLetterById(Long id);
 
-    void deleteLetter(Long id);
+    void deleteLetter(Long id, Integer pw);
 
     List<Letter> search(String type, String keyword, LocalDate date);
 
