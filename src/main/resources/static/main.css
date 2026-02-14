@@ -116,7 +116,7 @@ body{
 
 .title, .name, .lock {
     background-color: #e0dbef;
-    border-radius: 15px;
+    border-radius: 20px;
     color: #6c5a72;
     display: flex;  
     justify-content: center;

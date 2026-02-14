@@ -1,7 +1,7 @@
-import * as Date from "./date.js";
+import * as Date from "/date.js";
+import * as View from "/view.js";
 const content = document.querySelector("#content");
 const search_btn = document.querySelector("#search");
-const select_option = document.querySelector("#search-option");
 
 /* 이벤트 리스너 */
 // 검색하기
@@ -9,14 +9,19 @@ if (search_btn) {
   search_btn.addEventListener("click", () => {
     const val = document.querySelector("#search-input").value;
     const date = document.querySelector("#calendar").value;
-    search("/api/letters", val, date);
+    const select_option = document.querySelector("#search-option").value;
+    search(val, date, select_option);
   });
 }
 
+/* fetch API */
 // 데이터 불러오기
-export const load = function (url) {
-  fetch(url)
-    .then((response) => response.json())
+export const load = function () {
+  fetch("/api/letters")
+    .then((response) => {
+      if (!response.ok) throw new Error("NOT OK");
+      return response.json();
+    })
     .then((json) => {
       // 화면 초기화
       clear();
@@ -39,33 +44,25 @@ export const load = function (url) {
     });
 };
 
-/* fetch API */
 // 데이터 검색하기
-const search = function (url, val, date) {
-  fetch(url)
-    .then((response) => response.json())
+const search = function (val, date, select_option) {
+  fetch(`/api/letters/search?${isdate(val, date, select_option)}`)
+    .then((response) => {
+      if (!response.ok) throw new Error("NOT OK");
+      return response.json();
+    })
     .then((json) => {
       // 화면 초기화
       clear();
 
-      // select box에 따른 검색
-      let filter_name;
-      if (select_option.value == "작성자")
-        filter_name = json.filter((data) => data.name.includes(val));
-      else filter_name = json.filter((data) => data.title.includes(val));
-
-      // date에 따른 검색
-      if (date != "")
-        filter_name = filter_name.filter((data) => data.createdAt == date);
-
       // 해당 값 없을 시
-      if (filter_name.length == 0) {
+      if (json.length == 0) {
         add_nolist();
         return;
       }
 
       // 해당 값 있을 때
-      filter_name.forEach((element) => {
+      json.forEach((element) => {
         add_item(element);
       });
     })
@@ -76,13 +73,30 @@ const search = function (url, val, date) {
     });
 };
 
+// 데이터 삭제하기
+const del = function (id, pw) {
+  fetch(`/api/letters/${id}`, {
+    method: "DELETE",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ pw: pw })
+  })
+    .then((response) => {
+      if (!response.ok) throw new Error("NOT OK");
+      alert("삭제되었습니다.");
+      load();
+    })
+    .catch((error) => {
+      alert("삭제에 실패하였습니다.");
+    });
+};
+
 /* 함수 */
 // item(목록) 추가
 const add_item = function (data) {
   // 잠금 여부
   let lock;
-  if (islock(data)) lock = "🔒";
-  else lock = "🔓";
+  if (islock(data)) lock = "🔓";
+  else lock = "🔒";
 
   const item = `
         <div class="item" id="${data.id}">
@@ -98,6 +112,12 @@ const add_item = function (data) {
         </div>`;
 
   content.insertAdjacentHTML("beforeend", item);
+
+  // 각 item에 리스너 부여
+  const last_item = content.lastElementChild;
+  last_item.addEventListener("click", () => {
+    msg(data);
+  });
 };
 
 // 화면 초기화
@@ -115,10 +135,36 @@ const add_nolist = function () {
 
 // 기간 검사(1년)
 const islock = function (data) {
-  if (data.endDate > Date.current()) return true;
+  if (data.endDate <= Date.current()) return true;
   else return false;
 };
 
+// 메시지 입력
+const msg = function (data) {
+  const num = prompt("번호 입력(1. 열람 / 2. 삭제 / 3. 취소)");
+  if (num == "1") {
+    if (islock(data)) View.view(data.id);
+    else alert("열람 기간이 아닙니다.");
+  } else if (num == "2") {
+    const pw = prompt("비밀번호 입력");
+    del(data.id, pw);
+  }
+};
+
+// spring 처리를 위해 객체 변환
+const isdate = function (val, date, select_option) {
+  if (date == "") {
+    return new URLSearchParams({
+      keyword: val,
+      type: select_option,
+    }).toString();
+  }
+  return new URLSearchParams({
+    keyword: val,
+    type: select_option,
+    date: date,
+  }).toString();
+};
+
 /* 실행 */
-if(content)
-    load("/api/letters");
+if (content) load();

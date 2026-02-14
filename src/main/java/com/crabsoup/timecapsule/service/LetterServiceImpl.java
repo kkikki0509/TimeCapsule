@@ -48,6 +48,12 @@ public class LetterServiceImpl implements LetterService {
 
      public List<Letter> search(String type, String keyword, LocalDate date) {
 
+        if ((type == null || type.isBlank()) &&
+            (keyword == null || keyword.isBlank()) &&
+            date == null) {
+                return letterRepository.findAll();
+        }
+
         if ("name".equals(type)) {
             if (date == null) {
                 return letterRepository.findByNameContaining(keyword);
@@ -62,7 +68,7 @@ public class LetterServiceImpl implements LetterService {
             return letterRepository.findByTitleContainingAndCreatedAt(keyword, date);
         }
 
-        throw new IllegalArgumentException("다시 검색해주세요");
+        return letterRepository.findAll();
     }
     
 }

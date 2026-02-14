@@ -2,6 +2,7 @@ package com.crabsoup.timecapsule.controller;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,19 +37,20 @@ public class LetterController {
         return letterService.getAllLetters();
     }
 
-    /*단건조회
+    //단건조회
     @GetMapping("/{id}")
     public Letter getLetter(@PathVariable Long id) {
         return letterService.getLetterById(id);
     }
-    */
+    
 
     //삭제
     @DeleteMapping("/{id}")
     public void deleteLetter(
         @PathVariable Long id,
-        @RequestParam Integer pw
+        @RequestBody Map<String, String> body
     ) {
+        Integer pw = Integer.valueOf(body.get("pw"));
         letterService.deleteLetter(id, pw);
     }
 
@@ -59,6 +61,7 @@ public class LetterController {
             @RequestParam(required = false) String keyword,
             @RequestParam(required = false) LocalDate date
     ) {
+
         return letterService.search(type, keyword, date);
     }
         
