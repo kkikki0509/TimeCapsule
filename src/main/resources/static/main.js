@@ -1,5 +1,3 @@
-import * as Date from "/date.js";
-import * as View from "/view.js";
 const content = document.querySelector("#content");
 const search_btn = document.querySelector("#search");
 
@@ -75,7 +73,7 @@ const search = function (val, date, select_option) {
 
 // 데이터 삭제하기
 const del = function (id, pw) {
-  fetch(`/api/letters/${id}`, {
+  fetch(`/api/letters/${id}?pw=${pw}`, {
     method: "DELETE",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ pw: pw })
@@ -95,8 +93,8 @@ const del = function (id, pw) {
 const add_item = function (data) {
   // 잠금 여부
   let lock;
-  if (islock(data)) lock = "🔓";
-  else lock = "🔒";
+  if (data.locked) lock = "🔒";
+  else lock = "🔓";
 
   const item = `
         <div class="item" id="${data.id}">
@@ -133,19 +131,16 @@ const add_nolist = function () {
   content.classList.add("active");
 };
 
-// 기간 검사(1년)
-const islock = function (data) {
-  if (data.endDate <= Date.current()) return true;
-  else return false;
-};
-
 // 메시지 입력
 const msg = function (data) {
   const num = prompt("번호 입력(1. 열람 / 2. 삭제 / 3. 취소)");
   if (num == "1") {
-    if (islock(data)) View.view(data.id);
+    if (!data.locked){
+      window.location.href = `/view.html?id=${data.id}`;
+    } 
     else alert("열람 기간이 아닙니다.");
-  } else if (num == "2") {
+  } 
+  else if (num == "2") {
     const pw = prompt("비밀번호 입력");
     del(data.id, pw);
   }

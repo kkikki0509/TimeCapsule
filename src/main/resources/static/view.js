@@ -9,13 +9,12 @@ const view_pw = document.querySelector("#v_pw");
 if (back) {
   back.addEventListener("click", () => {
     clear_item();
-    Main.load("/api/letters");
   });
 }
 
 /* fetch API */
 // 데이터 열람
-export const view = function (id) {
+const view = function (id) {
   fetch(`/api/letters/${id}`)
     .then((response) => {
       if (!response.ok) throw new Error("NOT OK");
@@ -46,3 +45,12 @@ const clear_item = function (data) {
   view_write.value = "";
   view_pw.value = "";
 };
+
+// url에서 id 찾아오기
+const search_id = function(){
+  const url_params = new URLSearchParams(window.location.search);
+  return url_params.get("id");
+}
+
+/* 실행 */
+view(search_id());

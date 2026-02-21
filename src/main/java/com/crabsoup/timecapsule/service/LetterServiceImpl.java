@@ -18,6 +18,10 @@ public class LetterServiceImpl implements LetterService {
 
     @Override
     public Letter createLetter(Letter letter) {
+        LocalDate today = LocalDate.now();
+        letter.setCreatedAt(today);
+        letter.setEndDate(today.plusYears(1));
+
         return letterRepository.save(letter);
     }
 
@@ -28,7 +32,14 @@ public class LetterServiceImpl implements LetterService {
 
     @Override
     public Letter getLetterById(Long id) {
-        return letterRepository.findById(id).orElseThrow(() -> new RuntimeException("검색 결과가 없습니다"));
+        Letter letter = letterRepository.findById(id)
+        .orElseThrow(() -> new RuntimeException("검색 결과가 없습니다"));
+
+        if (letter.isLocked()) {
+            throw new IllegalStateException("열람 기간이 아닙니다");
+        }
+
+        return letter;
     }
 
     @Override
@@ -68,7 +79,7 @@ public class LetterServiceImpl implements LetterService {
             return letterRepository.findByTitleContainingAndCreatedAt(keyword, date);
         }
 
-        return letterRepository.findAll();
+        throw new IllegalArgumentException("다시 검색해주세요");
     }
     
 }

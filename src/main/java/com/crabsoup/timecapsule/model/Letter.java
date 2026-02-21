@@ -31,8 +31,9 @@ public class Letter {
     @Column(name = "endDate")
     private LocalDate endDate;
 
-    private boolean locked;
-
+    public boolean isLocked() {
+        return LocalDate.now().isBefore(this.endDate);
+    }
     private Integer pw;
        
 }
