@@ -8,8 +8,8 @@
 
 | 이름 | 역할 | 담당 업무 | 역할 및 상세 기여 |
 | :--- | :--- | :--- | :--- |
-| y2ahhh | 백엔드 & 프론트엔드 지원 | 데이터베이스 구조 설계 및 초기 레이아웃 작업 지원| [자세한 내용 보기](./미정) |
-| kanak71 | 백엔드 | Spring 기반 서버 및 API 구현 | [자세한 내용 보기](./미정) |
+| y2ahhh | 백엔드 & 프론트엔드 지원 | 데이터베이스 구조 설계 및 초기 레이아웃 작업 지원| - |
+| kanak71 | 백엔드 | Spring 기반 서버 및 API 구현 | - |
 | wjdrldns | 프론트엔드 | HTML 레이아웃 구성 및 CSS 스타일링, fetch API 기반 동적 UI 구현 | [자세한 내용 보기](https://github.com/kkikki0509/Project-Retrospective/blob/b1394192002663ed1093b86d3aca18b1cada82ad/TimeCapsule%20Project.md) |
 
 ## 주요 기능 및 구현
